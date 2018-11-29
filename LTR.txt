@@ -1,0 +1,65 @@
+; Dado um número em uma posição de memória verifique se este é um
+; número perfeito. Imprima “verdadeiro” ou “falso” na saída.
+
+JMP start
+
+i: DB 0			; contador do laço for
+np: DB 0		; contador número perfeito
+num: DB 6		; número a ser verificado
+nptrue: DB "Verdadeiro"	
+DB 0
+npfalse: DB "Falso"
+DB 0
+
+start:	
+
+.inicio_for:
+	MOV A, [num]	; A = num
+	MOV B, [i] 	; B = i
+	INC B 		; B++
+	MOV [i], B 	; i = B
+	CMP B, [num]	; B == num ?
+	JAE .fora_for	; sim, >=
+	
+	DIV B		; A / B(i)
+	MUL B		; A * B
+	SUB A, [num] 	; A - num	
+	CMP A, 0	; A == 0
+	JNE .inicio_for ; não, != 0	
+
+.if_no_carry:
+	MOV A, [np]	; A = np
+	ADD A, B	; A + B -> np += i
+	MOV [np], A	; np = A 
+	JMP .inicio_for	
+
+.fora_for:
+	MOV A, [np]	; A = np
+	CMP A, [num]	; A == num ?
+	JE .true	; sim, ==
+	MOV C, npfalse  ; não, C = npfalse
+	MOV D, 232	; D = saída
+	CALL print
+        HLT
+
+.true:
+	MOV C, nptrue
+	MOV D, 232	
+	CALL print
+        HLT
+
+print:			
+	PUSH A
+	PUSH B
+	MOV B, 0
+.loop:
+	MOV A, [C]	; A = C[i]
+	MOV [D], A	; D = A
+	INC C		; C++ -> C[i+1]
+	INC D  		; D++ -> D[saída+1]
+	CMP B, [C]	; B(0) == C ?
+	JNZ .loop	; não, != 0
+
+	POP B
+	POP A
+	RET
