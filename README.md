@@ -1,4 +1,4 @@
-# Numero-perfeito-assembly
+# Numero perfeito assembly (Simple 8-bit)
 Trabalho feito na cadeira de Organização e arquitetura de computadores na UFSM em 2018/1
 
 ### Simulador assembly usado:
